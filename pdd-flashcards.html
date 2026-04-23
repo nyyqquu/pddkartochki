@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Карточки ПДД</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{--bg:#f7f6f2;--surf:#fff;--surf2:#f3f0ec;--bord:#e0ddd7;--txt:#28251d;--muted:#7a7974;--faint:#bab9b4;--pri:#01696f;--suc:#437a22;--warn-bg:#fff8f0;--warn:#964219;--shad:0 2px 8px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);--shadh:0 8px 24px rgba(0,0,0,.12)}
+[data-theme="dark"]{--bg:#171614;--surf:#1c1b19;--surf2:#252422;--bord:#393836;--txt:#cdccca;--muted:#797876;--faint:#5a5957;--pri:#4f98a3;--suc:#6daa45;--warn-bg:#2a1f10;--warn:#bb653b;--shad:0 2px 8px rgba(0,0,0,.3);--shadh:0 8px 24px rgba(0,0,0,.4)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--txt);min-height:100dvh;padding-bottom:60px;transition:background .2s,color .2s}
+header{background:var(--surf);border-bottom:1px solid var(--bord);padding:14px 20px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--pri);text-decoration:none}
+.hright{display:flex;align-items:center;gap:10px}
+.sbadge{font-size:13px;font-weight:500;color:var(--muted);background:var(--surf2);border:1px solid var(--bord);border-radius:20px;padding:4px 12px}
+.tbtn{background:var(--surf2);border:1px solid var(--bord);border-radius:8px;padding:7px;cursor:pointer;color:var(--muted);display:flex;align-items:center;transition:all .18s}
+.tbtn:hover{color:var(--pri);border-color:var(--pri)}
+.controls{max-width:880px;margin:22px auto 0;padding:0 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fbtn{padding:7px 16px;border-radius:20px;border:1px solid var(--bord);background:var(--surf);color:var(--muted);font-size:13px;font-weight:500;cursor:pointer;transition:all .18s}
+.fbtn:hover{border-color:var(--pri);color:var(--pri)}
+.fbtn.active{background:var(--pri);border-color:var(--pri);color:#fff}
+.pwrap{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.pbar{width:120px;height:6px;background:var(--bord);border-radius:3px;overflow:hidden}
+.pfill{height:100%;background:var(--pri);border-radius:3px;transition:width .4s}
+.grid{max-width:880px;margin:20px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+.cw{perspective:1200px}
+.card{position:relative;width:100%;min-height:230px;cursor:pointer;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1),box-shadow .2s;border-radius:16px;box-shadow:var(--shad)}
+.card:hover{box-shadow:var(--shadh)}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:18px;background:var(--surf);border:1px solid var(--bord);display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.back{transform:rotateY(180deg)}
+.cmeta{display:flex;gap:6px;flex-wrap:wrap}
+.badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em}
+.bt{background:rgba(1,105,111,.1);color:var(--pri)}
+.bq{background:var(--surf2);color:var(--muted)}
+.bv{background:var(--warn-bg);color:var(--warn)}
+.cq{font-size:14px;font-weight:600;line-height:1.45;color:var(--txt);flex:1}
+.opts{display:flex;flex-direction:column;gap:5px}
+.opt{font-size:12.5px;line-height:1.4;color:var(--muted);padding:6px 10px;border-radius:6px;background:var(--surf2)}
+.hint{font-size:12px;color:var(--faint);margin-top:auto;display:flex;align-items:center;gap:5px}
+.albl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--suc)}
+.atxt{font-size:14px;font-weight:600;line-height:1.4;color:var(--txt);padding:10px 13px;border-radius:6px;background:rgba(67,122,34,.08);border:1px solid rgba(67,122,34,.2)}
+.elbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.expl{font-size:13px;line-height:1.5;color:var(--muted);flex:1}
+.tip{font-size:12px;padding:8px 10px;border-radius:6px;background:rgba(1,105,111,.07);color:var(--pri);border-left:2px solid var(--pri)}
+.flipback{font-size:12px;color:var(--faint);margin-top:auto;text-align:right}
+.empty{text-align:center;color:var(--muted);padding:60px 20px;grid-column:1/-1}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none"><rect width="28" height="28" rx="7" fill="var(--pri)"/><rect x="6" y="8" width="10" height="2.5" rx="1.25" fill="white"/><rect x="6" y="12.5" width="16" height="2.5" rx="1.25" fill="white"/><rect x="6" y="17" width="7" height="2.5" rx="1.25" fill="white"/><circle cx="20" cy="19" r="4" fill="white"/><path d="M18.5 19l1 1 2-2" stroke="var(--pri)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    ПДД Карточки
+  </a>
+  <div class="hright">
+    <span class="sbadge" id="sb">0 / 30 изучено</span>
+    <button class="tbtn" data-theme-toggle aria-label="Тема"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+  </div>
+</header>
+<div class="controls">
+  <button class="fbtn active" data-f="all">Все</button>
+  <button class="fbtn" data-f="unseen">Непросмотренные</button>
+  <button class="fbtn" data-f="seen">Просмотренные</button>
+  <button class="fbtn" data-f="verify">⚠ Проверить</button>
+  <div class="pwrap"><div class="pbar"><div class="pfill" id="pf" style="width:0%"></div></div><span id="pt">0%</span></div>
+</div>
+<div class="grid" id="grid"></div>
+<script>
+const DATA=[
+  {tn:"БЗВ19",qn:4,q:"На повороте возник занос задней оси переднеприводного автомобиля. Ваши действия?",opts:["Уменьшите подачу топлива, рулевым колесом стабилизируете движение.","Притормозите и повернёте рулевое колесо в сторону заноса.","Слегка увеличите подачу топлива, корректируя направление движения рулевым колесом.","Значительно увеличите подачу топлива, не меняя положения рулевого колеса."],ans:"Слегка увеличите подачу топлива, корректируя направление движения рулевым колесом.",expl:"У переднеприводного авто при заносе задней оси нужно слегка добавить газ — передние колёса подтягивают заднюю ось и стабилизируют автомобиль.",tip:"Перед. привод → газ помогает. Задний привод → газ вредит.",v:false},
+  {tn:"Б13В4",qn:6,q:"Эта табличка распространяет действие установленного с ней знака:",opts:["Только на легковые автомобили.","На легковые автомобили, а также на грузовые с массой не более 3,5 т.","На легковые автомобили и мотоциклы."],ans:"На легковые автомобили, а также на грузовые с массой не более 3,5 т.",expl:"Табличка 8.4.1 распространяет действие знака на легковые и грузовые ТС до 3,5 т.",tip:"3,5 т — граница между «лёгкими» и «тяжёлыми» грузовиками в ПДД.",v:false},
+  {tn:"Б24В19",qn:7,q:"Что следует сделать водителю, чтобы предотвратить возникновение заноса при проезде крутого поворота?",opts:["Снизить скорость и выжать сцепление, чтобы двигаться накатом.","Снизить скорость, при необходимости включить пониженную передачу, а при проезде поворота не увеличивать резко скорость и не тормозить.","Допускаются любые из перечисленных действий."],ans:"Снизить скорость, при необходимости включить пониженную передачу, а при проезде поворота не увеличивать резко скорость и не тормозить.",expl:"Правильная техника: снижаем скорость ДО поворота, входим плавно, не тормозим и не ускоряемся резко в повороте.",tip:"Торможение в повороте = занос. Тормози ДО, не ВО ВРЕМЯ.",v:false},
+  {tn:"Б27В13",qn:8,q:"Как Вам следует поступить при повороте направо? (Регулировщик)",opts:["Остановиться и дождаться другого сигнала.","Проехать перекрёсток, уступив дорогу трамваю.","Проехать перекрёсток первым."],ans:"Проехать перекрёсток, уступив дорогу трамваю.",expl:"Трамвай имеет преимущество перед безрельсовыми ТС. При повороте направо необходимо уступить трамваю, движущемуся прямо.",tip:"Трамвай — приоритет на рельсах в большинстве случаев.",v:false},
+  {tn:"Б27В16",qn:9,q:"На каком наименьшем расстоянии до ближайшего рельса Вы должны остановиться?",opts:["5 м.","10 м.","15 м.","20 м."],ans:"5 м.",expl:"ПДД: остановка разрешена не ближе 5 метров до ближайшего рельса трамвайного пути.",tip:"5 метров до рельса — как длина легкового авто.",v:false},
+  {tn:"Б28В12",qn:11,q:"В каком месте и направлении Вам разрешено остановиться? (Знак ЛИПЕЦК)",opts:["Только В.","Б и В.","В любом из указанных."],ans:"Только В.",expl:"По схеме задачи только место В является допустимым для остановки согласно знакам и разметке.",tip:"Смотри на разметку и знаки — они указывают единственное допустимое место.",v:true},
+  {tn:"Б29В12",qn:12,q:"Кто из водителей нарушил правила остановки?",opts:["Оба.","Только водитель автомобиля А.","Только водитель автомобиля Б.","Никто не нарушил."],ans:"Только водитель автомобиля А.",expl:"Автомобиль А остановился в нарушение ПДД (ближе 5 м от перехода или в запрещённой зоне), автомобиль Б — правомерно.",tip:"5 м до перехода, 15 м до остановки МТС — запретные зоны.",v:true},
+  {tn:"Б32В19",qn:14,q:"При повороте налево безопасность достигается путём выполнения поворота по траектории, которая показана:",opts:["На левом рисунке.","На правом рисунке.","На обоих рисунках."],ans:"На левом рисунке.",expl:"При повороте налево поворот выполняется по малому радиусу — центр перекрёстка остаётся справа от вас. Это левый рисунок.",tip:"Поворот налево → держись ближе к центру перекрёстка.",v:false},
+  {tn:"Б32В20",qn:15,q:"Как обеспечить проходимость дыхательных путей пострадавшего при подготовке к СЛР?",opts:["Уложить на спину, запрокинуть голову, положить руку на лоб, приподняв подбородок двумя пальцами другой руки.","Уложить на бок, наклонить голову к груди, при слизи очистить ротовую полость.","Уложить на спину, не запрокидывая голову, сжать щёки для открытия рта."],ans:"Уложить на спину, запрокинуть голову, положить руку на лоб, приподняв подбородок двумя пальцами другой руки.",expl:"Тройной приём Сафара: запрокидывание головы + подъём подбородка открывает дыхательные пути перед СЛР.",tip:"Запрокинь → приподними подбородок → дыхательные пути открыты.",v:false},
+  {tn:"БЗЗВ19",qn:16,q:"Какие действия водителя приведут к уменьшению центробежной силы на повороте?",opts:["Увеличение скорости движения.","Снижение скорости движения.","Уменьшение радиуса прохождения поворота."],ans:"Снижение скорости движения.",expl:"Центробежная сила пропорциональна квадрату скорости. При снижении скорости вдвое — сила уменьшается вчетверо.",tip:"Медленнее = безопаснее. Центробежная сила растёт с квадратом скорости!",v:false},
+  {tn:"Б34В13",qn:17,q:"Как Вам следует поступить при движении в прямом направлении? (Регулировщик)",opts:["Проехать перекрёсток первым.","Уступить дорогу трамваю.","Дождаться другого сигнала регулировщика."],ans:"Уступить дорогу трамваю.",expl:"При разрешающем сигнале регулировщика трамвай пользуется преимуществом перед безрельсовыми ТС.",tip:"Трамвай — всегда уступай, если нет прямого запрета.",v:false},
+  {tn:"БЗ6В4",qn:18,q:"Какие из указанных табличек распространяют действие знаков на грузовые автомобили с массой не более 3,5 т?",opts:["Только Б.","Только В.","Б и В.","Все."],ans:"Б и В.",expl:"Таблички 8.4.2 и 8.4.3 охватывают грузовые ТС до 3,5 т. Табличка А — только легковые.",tip:"Б и В — грузовые до 3,5 т. А — только легковые.",v:false},
+  {tn:"Б27В19",qn:19,q:"Устранение заноса задней оси путём увеличения скорости возможно:",opts:["Только на переднеприводном автомобиле.","Только на заднеприводном автомобиле.","На любом автомобиле из перечисленных."],ans:"Только на переднеприводном автомобиле.",expl:"У переднеприводного авто увеличение тяги на передних колёсах подтягивает заднюю ось. У заднеприводного это лишь усугубит занос.",tip:"Перед. привод → газ тянет заднюю ось. Задн. привод → газ её срывает.",v:false},
+  {tn:"Б13В13",qn:20,q:"В данной ситуации Вы не обязаны уступать дорогу трамваю при движении:",opts:["Прямо или направо.","Только прямо.","Только направо."],ans:"Прямо или направо.",expl:"По условию задачи трамвай находится в позиции, при которой движение прямо или направо не требует уступки дороги.",tip:"Смотри на направление трамвая: если не создаёт помех — уступать не нужно.",v:true},
+  {tn:"Б8В17",qn:21,q:"Какие световые приборы должны использоваться в тёмное время суток на освещённых участках дорог?",opts:["Только габаритные огни.","Фары ближнего света.","Габаритные огни или фары ближнего света."],ans:"Фары ближнего света.",expl:"ПДД п. 19.1: в тёмное время суток даже на освещённых дорогах обязательно включать фары ближнего (или дальнего) света.",tip:"Освещение дороги ≠ освещение по ПДД. Фары ближнего — обязательно!",v:false},
+  {tn:"Б29В16",qn:22,q:"Можно ли Вам, управляя грузовым автомобилем, осуществить опережение в данной ситуации?",opts:["Можно.","Можно, если разрешённая масса не более 2,5 т.","Нельзя."],ans:"Нельзя.",expl:"По условию задачи знак или разметка запрещают опережение для грузового автомобиля.",tip:"Грузовой + запрещающий знак/разметка = опережение запрещено.",v:true},
+  {tn:"Б40В4",qn:23,q:"Поставить на стоянку указанным на табличке способом можно:",opts:["Только легковые автомобили и мотоциклы.","Все ТС, кроме грузовых с разрешённой максимальной массой более 3,5 т.","Любые транспортные средства."],ans:"Все ТС, кроме грузовых с разрешённой максимальной массой более 3,5 т.",expl:"Табличка распространяется на все ТС, кроме тяжёлых грузовиков (более 3,5 т).",tip:"3,5 т — граница: тяжелее — особые ограничения на стоянку.",v:false},
+  {tn:"Б22В17",qn:24,q:"Какие световые приборы следует включать на мотоцикле в светлое время суток?",opts:["Габаритные огни.","Фару ближнего света или противотуманную фару.","Включение световых приборов на мотоцикле днём не обязательно."],ans:"Фару ближнего света или противотуманную фару.",expl:"ПДД п. 19.5: мотоциклы обязаны иметь включённой фару ближнего или противотуманную фару днём для повышения заметности.",tip:"Мотоцикл = всегда фара днём. Это спасает жизни.",v:false},
+  {tn:"Б18В18",qn:25,q:"За какие правонарушения предусмотрено наказание в виде обязательных работ?",opts:["За управление ТС без права управления (кроме учебной езды).","За управление ТС водителем, лишённым прав.","За передачу управления лицу без прав или лишённому их.","За все перечисленные правонарушения."],ans:"За все перечисленные правонарушения.",expl:"КоАП РФ предусматривает обязательные работы за все три перечисленных нарушения.",tip:"Нет прав / лишён / передал управление → обязательные работы за каждое.",v:false},
+  {tn:"Б5В20",qn:26,q:"При движении в условиях тумана расстояние до предметов представляется:",opts:["Большим, чем в действительности.","Соответствующим действительности.","Меньшим, чем в действительности."],ans:"Большим, чем в действительности.",expl:"В тумане расстояния кажутся больше из-за снижения контрастности. Водитель воспринимает предметы дальше, чем они есть.",tip:"Туман обманывает: кажется «далеко» → на самом деле близко. Снижай скорость!",v:false},
+  {tn:"Б17В11",qn:28,q:"Можно ли Вам начать обгон в населённом пункте? (Железнодорожный переезд вблизи)",opts:["Можно.","Можно, если обгон будет завершён до переезда.","Нельзя."],ans:"Нельзя.",expl:"Обгон запрещён на ж/д переездах и ближе 100 м перед ними (ПДД п. 11.4).",tip:"100 метров до переезда = зона запрета обгона. Всегда.",v:false},
+  {tn:"Б19В12",qn:29,q:"Кто из водителей нарушил правила стоянки?",opts:["Оба.","Только водитель автомобиля А.","Только водитель автомобиля Б.","Никто не нарушил."],ans:"Только водитель автомобиля А.",expl:"По схеме задачи автомобиль А припаркован с нарушением, автомобиль Б — правомерно.",tip:"Проверяй: знаки, разметка, расстояния до перекрёстков и переходов.",v:true},
+  {tn:"Б27В18",qn:30,q:"Какие правонарушения лишённого прав водителя влекут административный арест?",opts:["Управление ТС; оставление места ДТП.","Управление ТС в опьянении; невыполнение требования о медосвидетельствовании.","Все перечисленные действия."],ans:"Все перечисленные действия.",expl:"КоАП РФ: если водитель лишён прав и совершает любое из перечисленных нарушений — следует административный арест.",tip:"Лишён прав + любое нарушение = административный арест.",v:false},
+  {tn:"Б16В12",qn:31,q:"В каком из указанных мест Вы можете поставить автомобиль на стоянку?",opts:["Только В.","Б или В.","В любом."],ans:"Только В.",expl:"Места А и Б находятся в запрещённых зонах по схеме. Место В — единственное допустимое.",tip:"Ищи место без знаков запрета, вдали от переходов (5 м) и остановок (15 м).",v:true},
+  {tn:"Б16В19",qn:32,q:"При повороте направо безопасность достигается путём выполнения поворота по траектории, которая показана:",opts:["На левом рисунке.","На правом рисунке.","На обоих рисунках."],ans:"На правом рисунке.",expl:"При повороте направо нужно прижиматься к правому краю — малый радиус. Это правый рисунок.",tip:"Направо → прижимайся к правому краю. Малый радиус = безопасность.",v:false},
+  {tn:"Б36В12",qn:33,q:"Разрешена ли Вам остановка для высадки пассажиров в указанном месте?",opts:["Разрешена.","Разрешена, если не будут созданы помехи для маршрутных ТС.","Запрещена."],ans:"Разрешена, если не будут созданы помехи для маршрутных ТС.",expl:"Вблизи остановки МТС кратковременная остановка для высадки разрешена, но без создания помех трамваю, автобусу или троллейбусу.",tip:"Маршрутка имеет приоритет у своей остановки. Высаживай — но не мешай.",v:false},
+  {tn:"Б36В13",qn:34,q:"Вы намерены повернуть направо. Ваши действия? (Регулировщик)",opts:["Дождётесь другого сигнала регулировщика.","Уступите дорогу легковому автомобилю, осуществляющему разворот.","Проедете перекрёсток первым."],ans:"Проедете перекрёсток первым.",expl:"Разворачивающийся обязан уступать всем ТС. При разрешающем сигнале поворот направо выполняется первым.",tip:"Разворачивающийся всегда уступает. Вы поворачиваете направо → едете первым.",v:false},
+  {tn:"Б34В12",qn:35,q:"Водители каких автомобилей нарушили правила остановки?",opts:["Только автомобиля А.","Автомобилей А и Б.","Автомобилей А и В.","Всех автомобилей."],ans:"Автомобилей А и Б.",expl:"По схеме автомобили А и Б остановились с нарушением ПДД. Автомобиль В — правомерно.",tip:"Проверяй каждую машину: расстояние, знаки, разметка.",v:true},
+  {tn:"Б32В12",qn:36,q:"В каком месте Вам можно остановиться?",opts:["Только В.","А и В.","Б и В.","В любом из указанных."],ans:"Только В.",expl:"Места А и Б — запрещённые зоны по схеме. Место В — единственное допустимое для остановки.",tip:"Считай расстояния от переходов, знаков, перекрёстков.",v:true},
+  {tn:"Б28В19",qn:37,q:"Что следует предпринять, если на повороте возник занос задней оси заднеприводного автомобиля?",opts:["Увеличить подачу топлива, рулевым колесом стабилизировать движение.","Притормозить и повернуть рулевое колесо в сторону заноса.","Значительно уменьшить подачу топлива, не меняя положения рулевого колеса.","Слегка уменьшить подачу топлива и повернуть рулевое колесо в сторону заноса."],ans:"Слегка уменьшить подачу топлива и повернуть рулевое колесо в сторону заноса.",expl:"Заднеприводный + занос задней оси: слегка сбрось газ (не резко!) и поверни руль в сторону заноса для стабилизации.",tip:"Задний привод + занос → руль В сторону заноса + слегка сбрось газ.",v:false}
+];
+let seen=new Set(),filter="all";
+function stats(){const s=seen.size,t=DATA.length,p=Math.round(s/t*100);document.getElementById("sb").textContent=s+" / "+t+" изучено";document.getElementById("pf").style.width=p+"%";document.getElementById("pt").textContent=p+"%"}
+function filtered(){return DATA.filter(c=>{if(filter==="all")return true;if(filter==="unseen")return!seen.has(c.qn);if(filter==="seen")return seen.has(c.qn);if(filter==="verify")return c.v;return true})}
+function render(){
+  const g=document.getElementById("grid");g.innerHTML="";
+  const f=filtered();
+  if(!f.length){g.innerHTML='<div class="empty">Нет карточек по выбранному фильтру</div>';return}
+  f.forEach(c=>{
+    const w=document.createElement("div");w.className="cw";
+    const fl=seen.has(c.qn);
+    w.innerHTML=`<div class="card${fl?" flipped":""}" data-qn="${c.qn}" tabindex="0" role="button" aria-label="Вопрос ${c.qn}">
+      <div class="face front">
+        <div class="cmeta"><span class="badge bt">Билет ${c.tn}</span><span class="badge bq">№${c.qn}</span>${c.v?'<span class="badge bv">⚠ Проверить</span>':""}</div>
+        <div class="cq">${c.q}</div>
+        <div class="opts">${c.opts.map((o,i)=>`<div class="opt">${["А","Б","В","Г"][i]}. ${o}</div>`).join("")}</div>
+        <div class="hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg> Нажмите, чтобы увидеть ответ</div>
+      </div>
+      <div class="face back">
+        <div class="cmeta"><span class="badge bt">Билет ${c.tn}</span><span class="badge bq">№${c.qn}</span></div>
+        <div class="albl">✓ Правильный ответ</div>
+        <div class="atxt">${c.ans}</div>
+        <div class="elbl">Пояснение</div>
+        <div class="expl">${c.expl}</div>
+        ${c.tip?`<div class="tip">💡 ${c.tip}</div>`:""}
+        <div class="flipback">Нажмите для возврата к вопросу ↺</div>
+      </div>
+    </div>`;
+    const el=w.querySelector(".card");
+    el.addEventListener("click",()=>{
+      el.classList.toggle("flipped");
+      if(el.classList.contains("flipped"))seen.add(c.qn);else seen.delete(c.qn);
+      stats();
+    });
+    el.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")el.click()});
+    g.appendChild(w);
+  });
+}
+document.querySelectorAll(".fbtn").forEach(b=>{
+  b.addEventListener("click",()=>{document.querySelectorAll(".fbtn").forEach(x=>x.classList.remove("active"));b.classList.add("active");filter=b.dataset.f;render();});
+});
+(function(){
+  const t=document.querySelector("[data-theme-toggle]"),r=document.documentElement;
+  let d=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";
+  r.setAttribute("data-theme",d);
+  t&&t.addEventListener("click",()=>{
+    d=d==="dark"?"light":"dark";r.setAttribute("data-theme",d);
+    t.innerHTML=d==="dark"?'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>':'<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  });
+})();
+render();stats();
+</script>
+</body>
+</html>
